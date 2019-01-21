@@ -32,13 +32,14 @@ categories = (
 
 import time
 
-# Ends program if player enters 'exit' at any point of game
 def exit_message():
+    ''' End program if player enters 'exit' at any point of game. '''
+
     print("Sorry to see you go, {}. Hope you come back to play again.".format(NAME))
     exit()
 
-# Determines if game should stay in while loop of the main loop
 def check(categories):
+    ''' Determine if game should stay in while loop of the main loop. '''
 
     for i, cat in enumerate(categories):
         for amts in cat["board"]:
@@ -46,8 +47,8 @@ def check(categories):
             if type(amts) == int:
                 return True
 
-# Updates board, cleared out answers already selected
 def update_board(category, amount):
+    ''' Update board, clear out answers already selected. '''
 
     # Replaces used amount with blank
     for i, amts in enumerate(category["board"]):
@@ -68,8 +69,8 @@ def update_board(category, amount):
     print("    {}     |    {}".format(categories[0]["board"][4],categories[1]["board"][4]))
     print()
 
-# Asks for response and pulls correct response, then compares the two; updates then confirms new total
 def compare(category, amount, score):
+    ''' Ask for response and pull correct response, then compare the two; update then confirm new total. '''
 
     # Prompt to get player's response
     response = input("> What is... ").lower().strip()
@@ -123,15 +124,15 @@ def compare(category, amount, score):
 
     return total
 
-# Given the category and amount combination selected, retrieves and displays answer
 def pull_answer(category, amount):
+    ''' Given the category and amount combination selected, retrieve and display answer. '''
 
     answer = category[amount][0]
     print("[", answer.upper(), "]")
     
-# Asks player to select an amount
 def amount_select(category):
-    
+    ''' Ask player to select an amount. '''
+
     # Prompt
     print("and the amount")
 
@@ -162,9 +163,10 @@ def amount_select(category):
             elif amount not in category["board"]:
                 print('Sorry, amount entered is not in this category.\nSelect a different amount in the category')
 
-# Asks player to select a category
-def category_select():
 
+def category_select():
+    ''' Ask player to select a category. '''
+    
     # Prompt
     print("Select a category")
 
@@ -194,8 +196,9 @@ def category_select():
         else:
             print('Sorry, invalid category.\nSelect another category')
 
-# Runs through game until board is cleared
+
 def main_loop(categories):
+    ''' Run through game until board is cleared. '''
 
     # Introduction-
     print('\n\n*****************\nThis is Jeopardy!\n*****************\n')
