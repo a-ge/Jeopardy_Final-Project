@@ -7,71 +7,30 @@
 # ~ display updated board where previously selected answers are no longer available
 # ~ repeats until board is completely empty or if player enters "exit"
 
-
-
 # Stores all data for each category
 # {category: (acceptable categories),
 #     board: [board for available amounts]
-#    amount: (answer, [correct response]...}
+#    amount: (answer, [acceptable responses]...}
 categories = (
 {"cat": ("PLAY BALL", "PLAY", "BALL"),
-"board": [200, 400],
+"board": [200, 400, 600, 800, 1000],
 200: ("The beach version of this has been an Olympic sport since 1996", ["volleyball"]),
-400: ("The Brits put 'gridiron' before this sport to refer to the American version", ["football"])
+400: ("The Brits put 'gridiron' before this sport to refer to the American version", ["football"]),
+600: ("You need just a ball & a wall to play this sport with a body part in its name", ["handball"]),
+800: ("The ITTF is the International Federation for this ball & racket sport-- that's the 'TT'", ["table tennis"]),
+1000: ("It was invented in the winter of 1891 in Springfield, Massachusetts", ["basketball"])
 },
 
-{"cat": ("CAREER DAY", "CAREER", "DAY"),
-"board": [200, 400],
-200: ("This doctor specializes in children & their diseases", ["pediatrician"]),
-400: ("Not the automated kind but the human kind, it's a clerk at a bank window", ["teller"])
+{"cat": ("PLURALIZE IT", "PLURALIZE", "IT"),
+"board": [200, 400, 600, 800, 1000],
+200: ("Ox (4 letters, 4 legs)", ["oxen"]),
+400: ("Moose (4 legs, 5 letters)", ["moose"]),
+600: ("Cactus (5 letters)", ["cacti"]),
+800: ("Stimulus (7 letters)", ["stimuli"]),
+1000: ("Forum (4 letters)", ["fora"])
 })
 
-
-
 import time
-
-# Introduction-
-print()
-print()
-print("*****************")
-print("This is Jeopardy!")
-print("*****************")
-print()
-time.sleep(2)
-print("The quiz game-show, where the answers are revealed and the contestants must guess the questions.")
-print()
-time.sleep(4)
-print("Note: Spelling counts in this version.")
-print()
-time.sleep(3)
-print("Let's play.")
-print()
-time.sleep(1)
-
-# Asks and saves player's name
-print("Please enter the contestant's name")
-NAME = input("> ").title().strip()
-print()
-
-print("Welcome {}!".format(NAME))
-time.sleep(1)
-print("Thanks for joining today.")
-print()
-time.sleep(2)
-
-# First set of instructions
-print("Now, {}, take a look at the board and make your first selection.".format(NAME))
-print("(You can enter 'exit' at any time to end game)")
-print()
-print("============ ============")
-print(" {}  | {}".format(categories[0]["cat"][0], categories[1]["cat"][0]))
-print(" ___________|___________")
-print("    {}     |    {}".format(categories[0]["board"][0],categories[1]["board"][0]))
-print("    {}     |    {}".format(categories[0]["board"][1],categories[1]["board"][1]))
-print()
-time.sleep(1)
-
-
 
 # Ends program if player enters 'exit' at any point of game
 def exit_message():
@@ -81,26 +40,32 @@ def exit_message():
 # Determines if game should stay in while loop of the main loop
 def check(categories):
 
-    for cat in categories:
-        for i, amts in enumerate(cat["board"]):
-            if amts != "   ":
+    for i, cat in enumerate(categories):
+        for amts in cat["board"]:
+            # Board is cleared if all int's are gone (replaced by str's)
+            if type(amts) == int:
                 return True
 
 # Updates board, cleared out answers already selected
 def update_board(category, amount):
 
     # Replaces used amount with blank
-    for i, available in enumerate(category["board"]):
-        if available == amount:
-            category["board"][i] = "   "
+    for i, amts in enumerate(category["board"]):
+        if amts == amount:
+            if amount == 1000:
+                category["board"][i] = "    "
+            else:
+                category["board"][i] = "   "
 
     # Displays updated board that player can select from
-    print()
-    print("============ ============")
-    print(" {}  | {}".format(categories[0]["cat"][0], categories[1]["cat"][0]))
-    print(" ___________|___________")
-    print("    {}     |    {}".format(categories[0]["board"][0],categories[1]["board"][0]))
-    print("    {}     |    {}".format(categories[0]["board"][1],categories[1]["board"][1]))
+    print('\n============= =============\n')
+    print("  {}  | {}".format(categories[0]["cat"][0], categories[1]["cat"][0]))
+    print(" ____________|____________")
+    print("     {}     |     {}".format(categories[0]["board"][0],categories[1]["board"][0]))
+    print("     {}     |     {}".format(categories[0]["board"][1],categories[1]["board"][1]))
+    print("     {}     |     {}".format(categories[0]["board"][2],categories[1]["board"][2]))
+    print("     {}     |     {}".format(categories[0]["board"][3],categories[1]["board"][3]))
+    print("    {}     |    {}".format(categories[0]["board"][4],categories[1]["board"][4]))
     print()
 
 # Asks for response and pulls correct response, then compares the two; updates then confirms new total
@@ -110,7 +75,6 @@ def compare(category, amount, score):
     response = input("> What is... ").lower().strip()
     print()
 
-    # In case player adds "a_" and/or question mark to response
     if response.endswith("?"):
         response = response[:-1]
     if response.startswith("a "):
@@ -182,8 +146,7 @@ def amount_select(category):
 
         # Error message if not an integer
         elif not amount.isdigit():
-            print("Sorry, invalid amount.")
-            print("Select a different amount in the category")
+            print('Sorry, invalid amount.\nSelect a different amount in the category')
 
         # Checks if a valid amount was entered
         else:
@@ -197,8 +160,7 @@ def amount_select(category):
 
             # Error message if invaild amount
             elif amount not in category["board"]:
-                print("Sorry, amount entered is not in this category.")
-                print("Select a different amount in the category")
+                print('Sorry, amount entered is not in this category.\nSelect a different amount in the category')
 
 # Asks player to select a category
 def category_select():
@@ -208,7 +170,7 @@ def category_select():
 
     while True:
         # Where player enters their category selection
-        category = input("> ").upper().strip()
+        category = input("> ").strip().upper()
         print()
 
         # Player can select to end game with "exit"
@@ -218,28 +180,53 @@ def category_select():
         # Checks if category entered is acceptable
         for i, cat in enumerate(categories):
             if category in cat["cat"]:
+                category_select = categories[i]
 
                 # Checks if that category is empty
-                for amts in categories[i]["board"]:
-                    if amts != "   ":
-                        category_select = categories[i]
+                for amts in category_select["board"]:
+                    if type(amts) == int:
                         return category_select
-
-                print("Sorry, category is now empty.")
-                print("Select another category")
+                
+                print('Sorry, category is now empty.\nSelect another category')
                 break
                     
         # Error message if player enters an invalid category
         else:
-            print("Sorry, invalid category.")
-            print("Select another category")
+            print('Sorry, invalid category.\nSelect another category')
 
 # Runs through game until board is cleared
 def main_loop(categories):
 
+    # Introduction-
+    print('\n\n*****************\nThis is Jeopardy!\n*****************\n')
+    time.sleep(2)
+    print('The quiz game-show, where the answers are revealed and the contestants must guess the questions.\n')
+    time.sleep(4)
+    print('Note: Spelling counts in this version.\n')
+    time.sleep(3)
+    print("Let's play.\n")
+    time.sleep(1)
+
+    # Asks and saves player's name
+    print("Please enter the contestant's name")
+    NAME = input("> ").title()
+    print()
+
+    print("Welcome {}!".format(NAME))
+    time.sleep(1)
+    print('Thanks for joining today.\n')
+    time.sleep(2)
+
+    # First set of instructions
+    print("Now, {}, take a look at the board and make your first selection.".format(NAME))
+    print("(You can enter 'exit' at any time to end game)")
+    update_board(categories[0], 0)
+    time.sleep(1)
+
     # Player begins with score of zero
     score = 0
 
+    # Will run until there are no more integers on the board
     while check(categories):
         category = category_select()
         amount = amount_select(category)
@@ -259,8 +246,6 @@ def main_loop(categories):
     elif score == 0:
         print("{}, your final total is ${}.".format(NAME, score))
         print("No harm done. Thanks for playing.")
-
-
 
 # Begin game-
 main_loop(categories)
